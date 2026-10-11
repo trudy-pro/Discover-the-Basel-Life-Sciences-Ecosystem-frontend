@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowRight, Bookmark, Compass, RotateCcw, Sparkles, UserRound } from "lucide-react";
+import { Bookmark, Compass, RotateCcw, Sparkles, UserRound } from "lucide-react";
 import { useHydrated, useNavigator } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "./brand-mark";
@@ -80,30 +80,51 @@ export function SiteHeader() {
               <RotateCcw className="h-5 w-5" aria-hidden />
             </button>
           )}
-          <Link
-            href="/"
-            className="hidden h-12 items-center gap-2 rounded-full bg-primary px-6 text-base font-bold text-white shadow-[0_2px_8px_rgba(194,65,12,0.3)] transition-colors hover:bg-primary-dark lg:inline-flex"
-          >
-            Find a Match
-            <ArrowRight className="h-[18px] w-[18px]" aria-hidden />
-          </Link>
+          <InterfaceLanguagePlaceholder />
           <Link
             href="/profile"
             aria-label="Your profile"
             aria-current={pathname === "/profile" ? "page" : undefined}
-            className={cn(
-              // Mobile: a filled 32px avatar inside a 44px touch target. Desktop: outlined 48px button with a status dot.
-              "relative flex h-11 w-11 items-center justify-center rounded-full transition-colors lg:h-12 lg:w-12 lg:border lg:bg-white",
-              pathname === "/profile" ? "lg:border-primary lg:text-primary" : "lg:border-hairline lg:text-ink/80 lg:hover:border-muted lg:hover:text-ink",
-            )}
+            // Mobile only: a filled 32px avatar inside a 44px touch target.
+            className="flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white lg:h-auto lg:w-auto lg:bg-transparent lg:text-current">
-              <UserRound className="h-[18px] w-[18px] lg:h-5 lg:w-5" aria-hidden />
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">
+              <UserRound className="h-[18px] w-[18px]" aria-hidden />
             </span>
-            <span aria-hidden className="absolute -bottom-0.5 -right-0.5 hidden h-3 w-3 rounded-full border-2 border-white bg-stitch-tertiary lg:block" />
           </Link>
         </div>
       </div>
     </header>
+  );
+}
+
+/**
+ * PLACEHOLDER: interface language switch from the design. It has no functionality
+ * yet; the interface is English-only (the answer language is set on the landing page).
+ * EN is shown as current; DE and FR are marked unavailable.
+ */
+function InterfaceLanguagePlaceholder() {
+  return (
+    <div role="group" aria-label="Interface language" className="hidden items-center rounded-full bg-canvas-mid p-1 lg:flex">
+      {(["EN", "DE", "FR"] as const).map((code) => {
+        const current = code === "EN";
+        return (
+          <button
+            key={code}
+            type="button"
+            aria-pressed={current}
+            aria-disabled={!current}
+            title={current ? "English" : "Not available yet"}
+            className={cn(
+              "min-h-[36px] rounded-full px-4 text-label-md font-bold tracking-wide",
+              current ? "bg-white text-ink shadow-sm" : "cursor-default text-muted",
+            )}
+          >
+            {code}
+            {!current && <span className="sr-only"> (not available yet)</span>}
+          </button>
+        );
+      })}
+    </div>
   );
 }
