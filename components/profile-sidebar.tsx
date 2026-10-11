@@ -12,7 +12,7 @@ export function ProfileSidebar() {
   if (!profile) return null;
 
   return (
-    <aside aria-label="Your profile" className="no-print rounded-2xl border border-line bg-surface p-4 lg:sticky lg:top-20">
+    <aside aria-label="Your profile" className="no-print rounded-2xl border border-line bg-surface p-4 lg:sticky lg:top-24">
       <div className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-base font-semibold">{profile.companyName ?? "Your team"}</h2>
@@ -21,7 +21,7 @@ export function ProfileSidebar() {
           </p>
           <p className="mt-0.5 text-sm text-muted">Answers in {LANGUAGE_LABEL[profile.language]}</p>
         </div>
-        <Link href="/profile" aria-label="Edit profile" className="rounded-md p-1.5 text-primary hover:bg-primary-soft">
+        <Link href="/profile" aria-label="Edit profile" className="rounded-md p-1.5 text-primary hover:bg-primary-soft max-lg:p-3.5">
           <Pencil className="h-4 w-4" aria-hidden />
         </Link>
       </div>
@@ -48,7 +48,7 @@ export function ProfileSidebar() {
 
       <Link
         href="/shortlist"
-        className="mt-4 flex items-center justify-between rounded-lg bg-white px-3 py-2.5 text-sm font-medium hover:text-primary"
+        className="mt-4 flex items-center justify-between rounded-lg bg-white px-3 py-2.5 text-sm font-medium hover:text-primary max-lg:min-h-[44px]"
       >
         <span className="inline-flex items-center gap-2">
           <Bookmark className="h-4 w-4 text-accent" aria-hidden />

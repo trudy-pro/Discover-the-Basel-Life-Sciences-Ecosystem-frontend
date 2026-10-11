@@ -55,20 +55,20 @@ export default function ResultsPage() {
   return (
     <div
       className={cn(
-        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-28 pt-6 sm:px-6 lg:pb-12",
+        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-12 pt-6 sm:px-6",
         chatOpen ? "lg:grid-cols-[250px_minmax(0,1fr)_320px]" : "lg:grid-cols-[250px_minmax(0,1fr)]",
       )}
     >
       <ProfileSidebar />
 
       <div className="min-w-0">
-        <div className="no-print flex items-center justify-between gap-3">
-          {/* Desktop tabs. On mobile the same tabs render as a bottom nav. */}
+        {/* On mobile and tablet the tab row sticks under the header; the bottom nav is site navigation. */}
+        <div className="no-print sticky top-16 z-[800] -mx-4 flex items-center justify-between gap-2 bg-canvas/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:gap-3 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <div
             role="tablist"
             aria-label="Results"
             onKeyDown={onTabKey}
-            className="fixed inset-x-0 bottom-0 z-[800] grid grid-cols-4 border-t border-line bg-white lg:static lg:inline-flex lg:gap-1 lg:rounded-xl lg:border lg:p-1"
+            className="grid flex-1 grid-cols-4 gap-1 rounded-xl border border-line bg-white p-1 lg:inline-flex lg:flex-none"
           >
             {TABS.map(({ id, label, icon: Icon }) => (
               <button
@@ -81,19 +81,25 @@ export default function ResultsPage() {
                 tabIndex={tab === id ? 0 : -1}
                 onClick={() => setTab(id)}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-2 py-2.5 text-xs font-medium lg:flex-row lg:gap-2 lg:rounded-lg lg:px-4 lg:py-2 lg:text-sm",
-                  tab === id ? "text-primary lg:bg-primary lg:text-white" : "text-muted hover:text-ink",
+                  "flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-medium sm:gap-2 sm:px-4 sm:text-sm lg:min-h-0 lg:py-2",
+                  tab === id ? "bg-primary text-white" : "text-muted hover:text-ink",
                 )}
               >
-                <Icon className="h-5 w-5 lg:h-4 lg:w-4" aria-hidden />
+                <Icon className="hidden h-4 w-4 sm:block" aria-hidden />
                 {label}
               </button>
             ))}
           </div>
           <div className="ml-auto">
-            <Button variant={chatOpen ? "accent" : "outline"} onClick={() => setChatOpen((o) => !o)} aria-expanded={chatOpen}>
+            <Button
+              variant={chatOpen ? "accent" : "outline"}
+              onClick={() => setChatOpen((o) => !o)}
+              aria-expanded={chatOpen}
+              aria-label="Refine results"
+              className="h-11 w-11 px-0 sm:w-auto sm:px-4 lg:h-10"
+            >
               <MessageSquare className="h-4 w-4" aria-hidden />
-              Refine results
+              <span className="hidden sm:inline">Refine results</span>
             </Button>
           </div>
         </div>

@@ -11,11 +11,14 @@ interface Props {
   language: Language | null;
   onTranscript: (text: string) => void;
   onError: (message: string) => void;
+  /** Icon-only round button; style it with className (aria-pressed marks recording). */
+  compact?: boolean;
+  className?: string;
 }
 
 type State = "idle" | "recording" | "transcribing";
 
-export function MicButton({ language, onTranscript, onError }: Props) {
+export function MicButton({ language, onTranscript, onError, compact = false, className }: Props) {
   const [state, setState] = useState<State>("idle");
   const [mode, setMode] = useState<"elevenlabs" | "browser" | "none" | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
@@ -93,6 +96,32 @@ export function MicButton({ language, onTranscript, onError }: Props) {
     else startBrowser();
   };
 
+  const label = state === "transcribing" ? "Transcribing" : state === "recording" ? "Stop recording" : "Speak";
+  const icon =
+    state === "transcribing" ? (
+      <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
+    ) : state === "recording" ? (
+      <Square className="h-4 w-4 fill-current" aria-hidden />
+    ) : (
+      <Mic className="h-5 w-5" aria-hidden />
+    );
+
+  if (compact) {
+    return (
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={state === "transcribing"}
+        aria-pressed={state === "recording"}
+        aria-label={label}
+        title={label}
+        className={className}
+      >
+        {icon}
+      </button>
+    );
+  }
+
   return (
     <Button
       variant={state === "recording" ? "accent" : "outline"}
@@ -101,14 +130,8 @@ export function MicButton({ language, onTranscript, onError }: Props) {
       disabled={state === "transcribing"}
       aria-pressed={state === "recording"}
     >
-      {state === "transcribing" ? (
-        <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
-      ) : state === "recording" ? (
-        <Square className="h-4 w-4 fill-current" aria-hidden />
-      ) : (
-        <Mic className="h-5 w-5" aria-hidden />
-      )}
-      {state === "transcribing" ? "Transcribing" : state === "recording" ? "Stop recording" : "Speak"}
+      {icon}
+      {label}
     </Button>
   );
 }

@@ -57,7 +57,7 @@ export function MatchesTab() {
             step={5}
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
-            className="h-10 w-full accent-[#0E8F8A]"
+            className="h-10 w-full accent-[#C2410C] max-lg:h-11"
           />
         </div>
       </fieldset>

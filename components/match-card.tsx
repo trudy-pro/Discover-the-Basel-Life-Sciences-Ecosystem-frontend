@@ -56,7 +56,7 @@ export function MatchCard({ entity, match }: Props) {
 
       {match && (
         <details className="mt-3 text-sm">
-          <summary className="cursor-pointer font-medium text-primary">Why this match?</summary>
+          <summary className="cursor-pointer py-3 font-medium text-primary lg:py-0">Why this match?</summary>
           <ul className="mt-2 space-y-2">
             {match.citations.map((c, i) => (
               <li key={i} className="rounded-lg border border-line p-2.5">
