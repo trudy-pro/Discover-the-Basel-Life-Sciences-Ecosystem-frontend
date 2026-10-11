@@ -69,7 +69,7 @@ export function EntityDrawer() {
             </p>
 
             <div className="flex flex-wrap gap-2 border-t border-line pt-4">
-              <Button variant={shortlisted ? "accent" : "primary"} onClick={() => toggleShortlist(entity.id)}>
+              <Button variant={shortlisted ? "soft" : "primary"} onClick={() => toggleShortlist(entity.id)}>
                 {shortlisted ? "Remove from shortlist" : "Add to shortlist"}
               </Button>
               {hasProfile && (

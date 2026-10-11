@@ -21,6 +21,17 @@
   }
 }
 
+/* Third-party widgets ship their own fonts (Leaflet map, the 3D graph's tooltip and
+   hints). The `html` prefix outranks their bundled rules so they use Lato too. */
+html .leaflet-container,
+html .leaflet-control-zoom-in,
+html .leaflet-control-zoom-out,
+html .float-tooltip-kap,
+html .scene-nav-info,
+html .graph-info-msg {
+  font-family: inherit;
+}
+
 .print-only {
   display: none;
 }

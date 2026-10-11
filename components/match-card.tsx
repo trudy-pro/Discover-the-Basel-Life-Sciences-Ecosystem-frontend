@@ -74,7 +74,7 @@ export function MatchCard({ entity, match }: Props) {
       <div className="mt-auto flex flex-wrap gap-2 pt-4">
         <Button
           size="sm"
-          variant={shortlisted ? "accent" : "outline"}
+          variant={shortlisted ? "soft" : "outline"}
           aria-pressed={shortlisted}
           onClick={() => toggleShortlist(entity.id)}
         >

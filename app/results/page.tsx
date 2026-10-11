@@ -13,6 +13,7 @@ import { ProfileSidebar } from "@/components/profile-sidebar";
 import { PlanTab } from "@/components/plan-tab";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { WorkflowSteps } from "@/components/workflow-steps";
 
 const TABS = [
   { id: "matches", label: "Matches", icon: LayoutGrid },
@@ -28,6 +29,7 @@ export default function ResultsPage() {
   const profile = useNavigator((s) => s.profile);
   const hasMatches = useNavigator((s) => s.matches.length > 0);
   const analysing = useNavigator((s) => s.analysing);
+  const matchCount = useNavigator((s) => s.matches.length);
   const [tab, setTab] = useState<TabId>("matches");
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -53,10 +55,14 @@ export default function ResultsPage() {
   };
 
   return (
+    <>
+    <div className="no-print mx-auto flex max-w-[1400px] justify-center px-4 pt-6 sm:px-6">
+      <WorkflowSteps current={3} />
+    </div>
     <div
       className={cn(
-        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-12 pt-6 sm:px-6",
-        chatOpen ? "lg:grid-cols-[250px_minmax(0,1fr)_320px]" : "lg:grid-cols-[250px_minmax(0,1fr)]",
+        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-12 pt-4 sm:px-6",
+        chatOpen ? "lg:grid-cols-[250px_minmax(0,1fr)_320px] xl:grid-cols-[280px_minmax(0,1fr)_320px]" : "lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-8",
       )}
     >
       <ProfileSidebar />
@@ -68,7 +74,7 @@ export default function ResultsPage() {
             role="tablist"
             aria-label="Results"
             onKeyDown={onTabKey}
-            className="grid flex-1 grid-cols-4 gap-1 rounded-xl border border-line bg-white p-1 lg:inline-flex lg:flex-none"
+            className="grid flex-1 grid-cols-4 gap-1 rounded-full bg-canvas-mid p-1 lg:inline-flex lg:flex-none"
           >
             {TABS.map(({ id, label, icon: Icon }) => (
               <button
@@ -81,12 +87,22 @@ export default function ResultsPage() {
                 tabIndex={tab === id ? 0 : -1}
                 onClick={() => setTab(id)}
                 className={cn(
-                  "flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-medium sm:gap-2 sm:px-4 sm:text-sm lg:min-h-0 lg:py-2",
-                  tab === id ? "bg-primary text-white" : "text-muted hover:text-ink",
+                  "flex min-h-[44px] items-center justify-center gap-1.5 rounded-full px-1 text-xs font-bold transition-all sm:gap-2 sm:px-4 sm:text-sm lg:min-h-[40px]",
+                  tab === id ? "bg-white text-primary shadow-sm" : "text-muted hover:text-ink",
                 )}
               >
-                <Icon className="hidden h-4 w-4 sm:block" aria-hidden />
+                <Icon className={cn("hidden h-4 w-4 sm:block", tab === id ? "text-primary" : "text-muted")} aria-hidden />
                 {label}
+                {id === "matches" && matchCount > 0 && (
+                  <span
+                    className={cn(
+                      "hidden rounded px-1.5 py-0.5 text-[10px] sm:inline",
+                      tab === id ? "bg-primary-soft text-primary" : "bg-white text-gray-600",
+                    )}
+                  >
+                    {matchCount}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -117,7 +133,7 @@ export default function ResultsPage() {
           ) : (
             <div className={cn(analysing && "opacity-60")}>
               {tab === "matches" && <MatchesTab />}
-              {tab === "plan" && <PlanTab />}
+              {tab === "plan" && <PlanTab onShowMatches={() => setTab("matches")} />}
               {tab === "map" && <MapTab />}
               {tab === "graph" && <GraphTab />}
             </div>
@@ -127,6 +143,7 @@ export default function ResultsPage() {
 
       <ChatPanel open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
+    </>
   );
 }
 
@@ -142,7 +159,7 @@ function CardSkeletons() {
 
 function ResultsSkeleton() {
   return (
-    <div className="mx-auto grid max-w-[1400px] gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)]">
+    <div className="mx-auto grid max-w-[1400px] gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
       <Skeleton className="h-64 rounded-2xl" />
       <CardSkeletons />
     </div>

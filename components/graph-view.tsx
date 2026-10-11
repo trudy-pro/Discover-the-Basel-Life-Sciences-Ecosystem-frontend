@@ -124,7 +124,8 @@ export default function GraphView({ profile, matches, relations, entities, onSel
           sprite.color = node.neighbour ? "#5A6781" : "#14213D";
           sprite.textHeight = node.isStartup ? 5 : 3.2;
           sprite.fontWeight = node.isStartup ? "600" : "400";
-          sprite.fontFace = '"Schibsted Grotesk Variable", Helvetica, Arial, sans-serif';
+          // Canvas text can't read CSS variables, so use the page's resolved font (Lato).
+          sprite.fontFace = getComputedStyle(document.body).fontFamily;
           sprite.backgroundColor = "rgba(255,255,255,0.75)";
           sprite.padding = 0.8;
           sprite.borderRadius = 1.5;

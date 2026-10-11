@@ -13,6 +13,8 @@ const buttonVariants = cva(
         accent: "bg-accent text-white hover:bg-accent-dark",
         outline: "border border-line bg-white text-ink hover:bg-surface",
         ghost: "text-primary hover:bg-primary-soft",
+        // Light orange, e.g. an item that is already shortlisted.
+        soft: "border border-orange-200 bg-stitch-primary-fixed text-primary-dark hover:bg-[#FFCDBE]",
       },
       size: {
         sm: "h-8 px-3 text-sm max-lg:h-11",
