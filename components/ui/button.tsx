@@ -4,20 +4,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
   {
+    // Below lg (touch screens) every size is at least 44px tall.
     variants: {
       variant: {
         primary: "bg-primary text-white hover:bg-primary-dark",
         accent: "bg-accent text-white hover:bg-accent-dark",
         outline: "border border-line bg-white text-ink hover:bg-surface",
         ghost: "text-primary hover:bg-primary-soft",
+        // Light orange, e.g. an item that is already shortlisted.
+        soft: "border border-orange-200 bg-stitch-primary-fixed text-primary-dark hover:bg-[#FFCDBE]",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-sm",
+        sm: "h-8 px-3 text-sm max-lg:h-11",
+        md: "h-10 px-4 text-sm max-lg:h-11",
         lg: "h-12 px-6 text-base",
-        icon: "h-9 w-9",
+        icon: "h-9 w-9 max-lg:h-11 max-lg:w-11",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

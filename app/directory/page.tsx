@@ -55,7 +55,7 @@ function Directory() {
   const setType = (t: EntityType | null) => router.replace(t ? `/directory?type=${t}` : "/directory", { scroll: false });
   const tab = (active: boolean) =>
     cn(
-      "rounded-full border px-3 py-1.5 text-sm font-medium",
+      "rounded-full border px-3 py-1.5 text-sm font-medium max-lg:min-h-[44px]",
       active ? "border-primary bg-primary text-white" : "border-line bg-white text-muted hover:text-ink",
     );
 

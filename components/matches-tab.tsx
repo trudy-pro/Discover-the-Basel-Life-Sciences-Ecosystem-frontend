@@ -7,7 +7,7 @@ import { useNavigator } from "@/lib/store";
 import type { Canton, EntityType, Match, NeedCategory } from "@/lib/types";
 import { EmptyState } from "./empty-state";
 import { MatchCard } from "./match-card";
-import { Select } from "./ui/input";
+import { Dropdown } from "./ui/dropdown";
 
 export function MatchesTab() {
   const matches = useNavigator((s) => s.matches);
@@ -29,24 +29,31 @@ export function MatchesTab() {
       <fieldset className="grid gap-3 rounded-2xl border border-line bg-white p-4 sm:grid-cols-3">
         <legend className="sr-only">Filter matches</legend>
         <div>
-          <label htmlFor="f-type" className="mb-1 block text-sm font-medium">Type</label>
-          <Select id="f-type" value={type} onChange={(e) => setType(e.target.value as EntityType | "")}>
-            <option value="">All types</option>
-            {ENTITY_TYPES.map((t) => (
-              <option key={t} value={t}>{TYPE_META[t].label}</option>
-            ))}
-          </Select>
+          <label id="f-type-label" htmlFor="f-type" className="mb-1 block text-sm font-bold text-[#383835]">Type</label>
+          <Dropdown<EntityType | "">
+            id="f-type"
+            labelledBy="f-type-label"
+            value={type}
+            options={[{ value: "", label: "All types" }, ...ENTITY_TYPES.map((t) => ({ value: t, label: TYPE_META[t].label }))]}
+            onChange={setType}
+          />
         </div>
         <div>
-          <label htmlFor="f-canton" className="mb-1 block text-sm font-medium">Canton</label>
-          <Select id="f-canton" value={canton} onChange={(e) => setCanton(e.target.value as Canton | "")}>
-            <option value="">Both cantons</option>
-            <option value="BS">Basel-Stadt</option>
-            <option value="BL">Basel-Landschaft</option>
-          </Select>
+          <label id="f-canton-label" htmlFor="f-canton" className="mb-1 block text-sm font-bold text-[#383835]">Canton</label>
+          <Dropdown<Canton | "">
+            id="f-canton"
+            labelledBy="f-canton-label"
+            value={canton}
+            options={[
+              { value: "", label: "Both cantons" },
+              { value: "BS", label: "Basel-Stadt" },
+              { value: "BL", label: "Basel-Landschaft" },
+            ]}
+            onChange={setCanton}
+          />
         </div>
         <div>
-          <label htmlFor="f-score" className="mb-1 block text-sm font-medium">
+          <label htmlFor="f-score" className="mb-1 block text-sm font-bold text-[#383835]">
             Minimum match: <span className="tabular-nums">{minScore}</span>
           </label>
           <input
@@ -57,7 +64,7 @@ export function MatchesTab() {
             step={5}
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
-            className="h-10 w-full accent-[#0E8F8A]"
+            className="h-12 w-full accent-[#C2410C]"
           />
         </div>
       </fieldset>

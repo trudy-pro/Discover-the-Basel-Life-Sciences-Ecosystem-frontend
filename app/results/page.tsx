@@ -13,6 +13,7 @@ import { ProfileSidebar } from "@/components/profile-sidebar";
 import { PlanTab } from "@/components/plan-tab";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { WorkflowSteps } from "@/components/workflow-steps";
 
 const TABS = [
   { id: "matches", label: "Matches", icon: LayoutGrid },
@@ -28,6 +29,7 @@ export default function ResultsPage() {
   const profile = useNavigator((s) => s.profile);
   const hasMatches = useNavigator((s) => s.matches.length > 0);
   const analysing = useNavigator((s) => s.analysing);
+  const matchCount = useNavigator((s) => s.matches.length);
   const [tab, setTab] = useState<TabId>("matches");
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -53,22 +55,26 @@ export default function ResultsPage() {
   };
 
   return (
+    <>
+    <div className="no-print mx-auto flex max-w-[1400px] justify-center px-4 pt-6 sm:px-6">
+      <WorkflowSteps current={3} />
+    </div>
     <div
       className={cn(
-        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-28 pt-6 sm:px-6 lg:pb-12",
-        chatOpen ? "lg:grid-cols-[250px_minmax(0,1fr)_320px]" : "lg:grid-cols-[250px_minmax(0,1fr)]",
+        "mx-auto grid max-w-[1400px] gap-5 px-4 pb-12 pt-4 sm:px-6",
+        chatOpen ? "lg:grid-cols-[250px_minmax(0,1fr)_320px] xl:grid-cols-[280px_minmax(0,1fr)_320px]" : "lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-8",
       )}
     >
       <ProfileSidebar />
 
       <div className="min-w-0">
-        <div className="no-print flex items-center justify-between gap-3">
-          {/* Desktop tabs. On mobile the same tabs render as a bottom nav. */}
+        {/* On mobile and tablet the tab row sticks under the header; the bottom nav is site navigation. */}
+        <div className="no-print sticky top-16 z-[800] -mx-4 flex items-center justify-between gap-2 bg-canvas/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:gap-3 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <div
             role="tablist"
             aria-label="Results"
             onKeyDown={onTabKey}
-            className="fixed inset-x-0 bottom-0 z-[800] grid grid-cols-4 border-t border-line bg-white lg:static lg:inline-flex lg:gap-1 lg:rounded-xl lg:border lg:p-1"
+            className="grid flex-1 grid-cols-4 gap-1 rounded-full bg-canvas-mid p-1 lg:inline-flex lg:flex-none"
           >
             {TABS.map(({ id, label, icon: Icon }) => (
               <button
@@ -81,19 +87,35 @@ export default function ResultsPage() {
                 tabIndex={tab === id ? 0 : -1}
                 onClick={() => setTab(id)}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-2 py-2.5 text-xs font-medium lg:flex-row lg:gap-2 lg:rounded-lg lg:px-4 lg:py-2 lg:text-sm",
-                  tab === id ? "text-primary lg:bg-primary lg:text-white" : "text-muted hover:text-ink",
+                  "flex min-h-[44px] items-center justify-center gap-1.5 rounded-full px-1 text-xs font-bold transition-all sm:gap-2 sm:px-4 sm:text-sm lg:min-h-[40px]",
+                  tab === id ? "bg-white text-primary shadow-sm" : "text-muted hover:text-ink",
                 )}
               >
-                <Icon className="h-5 w-5 lg:h-4 lg:w-4" aria-hidden />
+                <Icon className={cn("hidden h-4 w-4 sm:block", tab === id ? "text-primary" : "text-muted")} aria-hidden />
                 {label}
+                {id === "matches" && matchCount > 0 && (
+                  <span
+                    className={cn(
+                      "hidden rounded px-1.5 py-0.5 text-[10px] sm:inline",
+                      tab === id ? "bg-primary-soft text-primary" : "bg-white text-gray-600",
+                    )}
+                  >
+                    {matchCount}
+                  </span>
+                )}
               </button>
             ))}
           </div>
           <div className="ml-auto">
-            <Button variant={chatOpen ? "accent" : "outline"} onClick={() => setChatOpen((o) => !o)} aria-expanded={chatOpen}>
+            <Button
+              variant={chatOpen ? "accent" : "outline"}
+              onClick={() => setChatOpen((o) => !o)}
+              aria-expanded={chatOpen}
+              aria-label="Refine results"
+              className="h-11 w-11 px-0 sm:w-auto sm:px-4 lg:h-10"
+            >
               <MessageSquare className="h-4 w-4" aria-hidden />
-              Refine results
+              <span className="hidden sm:inline">Refine results</span>
             </Button>
           </div>
         </div>
@@ -111,7 +133,7 @@ export default function ResultsPage() {
           ) : (
             <div className={cn(analysing && "opacity-60")}>
               {tab === "matches" && <MatchesTab />}
-              {tab === "plan" && <PlanTab />}
+              {tab === "plan" && <PlanTab onShowMatches={() => setTab("matches")} />}
               {tab === "map" && <MapTab />}
               {tab === "graph" && <GraphTab />}
             </div>
@@ -121,6 +143,7 @@ export default function ResultsPage() {
 
       <ChatPanel open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
+    </>
   );
 }
 
@@ -136,7 +159,7 @@ function CardSkeletons() {
 
 function ResultsSkeleton() {
   return (
-    <div className="mx-auto grid max-w-[1400px] gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)]">
+    <div className="mx-auto grid max-w-[1400px] gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
       <Skeleton className="h-64 rounded-2xl" />
       <CardSkeletons />
     </div>

@@ -7,15 +7,29 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-white font-sans text-ink antialiased;
+    @apply bg-canvas font-sans text-ink antialiased;
+    /* Lato is loaded at 400/700; map other weights to those instead of
+       synthesising a faux bold. */
+    font-synthesis: none;
   }
   :focus-visible {
-    outline: 2px solid #0e8f8a;
+    outline: 2px solid #c2410c;
     outline-offset: 2px;
   }
   h1, h2, h3 {
     letter-spacing: -0.015em;
   }
+}
+
+/* Third-party widgets ship their own fonts (Leaflet map, the 3D graph's tooltip and
+   hints). The `html` prefix outranks their bundled rules so they use Lato too. */
+html .leaflet-container,
+html .leaflet-control-zoom-in,
+html .leaflet-control-zoom-out,
+html .float-tooltip-kap,
+html .scene-nav-info,
+html .graph-info-msg {
+  font-family: inherit;
 }
 
 .print-only {
